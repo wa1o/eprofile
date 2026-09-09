@@ -66,17 +66,29 @@ function Contenido() {
   }
 
   async function alternarActivo(usuarioId: string, activoActual: boolean) {
-    await fetch(`/api/admin/estudiantes/${usuarioId}`, {
+    setError('');
+    const res = await fetch(`/api/admin/estudiantes/${usuarioId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ activo: !activoActual }),
     });
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      setError(json.error ?? 'No se pudo actualizar la cuenta.');
+      return;
+    }
     cargar();
   }
 
   async function eliminar(usuarioId: string) {
     if (!confirm('Eliminar esta cuenta y todo su contenido? Esta accion no se puede deshacer.')) return;
-    await fetch(`/api/admin/estudiantes/${usuarioId}`, { method: 'DELETE' });
+    setError('');
+    const res = await fetch(`/api/admin/estudiantes/${usuarioId}`, { method: 'DELETE' });
+    if (!res.ok) {
+      const json = await res.json().catch(() => ({}));
+      setError(json.error ?? 'No se pudo eliminar la cuenta.');
+      return;
+    }
     cargar();
   }
 
@@ -123,11 +135,13 @@ function Contenido() {
 
       <div className="card">
         <h2 style={{ marginTop: 0 }}>Estudiantes</h2>
+        {error && <p className="error">{error}</p>}
         {cargando ? (
           <p>Cargando...</p>
         ) : estudiantes.length === 0 ? (
           <p>Aun no hay estudiantes registrados.</p>
         ) : (
+          <div style={{ overflowX: 'auto' }}>
           <table>
             <thead>
               <tr>
@@ -172,6 +186,7 @@ function Contenido() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
     </div>
