@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { KeyRound, Lock } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 
 export default function SetPasswordPage() {
@@ -12,11 +13,27 @@ export default function SetPasswordPage() {
   const [guardando, setGuardando] = useState(false);
 
   useEffect(() => {
-    // supabase-js detecta el token de invitacion en el fragmento de la URL
-    // y crea la sesion automaticamente (detectSessionInUrl: true por defecto).
-    supabase.auth.getSession().then(({ data }) => {
+    (async () => {
+      const url = new URL(window.location.href);
+
+      if (url.searchParams.get('error_description')) {
+        setError(decodeURIComponent(url.searchParams.get('error_description')!));
+        return;
+      }
+
+      // Flujo PKCE: la URL trae ?code=...
+      if (url.searchParams.get('code')) {
+        const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(window.location.href);
+        if (exchangeError) {
+          setError(exchangeError.message);
+          return;
+        }
+      }
+
+      // Flujo implicito: supabase-js detecta el #access_token solo (detectSessionInUrl).
+      const { data } = await supabase.auth.getSession();
       setListo(!!data.session);
-    });
+    })();
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) setListo(true);
@@ -53,10 +70,29 @@ export default function SetPasswordPage() {
     router.push(estudiante?.slug ? `/${estudiante.slug}/admin` : '/admin');
   }
 
+  if (error && !listo) {
+    return (
+      <div className="pantalla-centrada">
+        <div className="card">
+          <div className="icono-circulo" style={{ background: '#fef2f2', color: 'var(--danger)' }}>
+            <KeyRound size={26} />
+          </div>
+          <p className="error">{error}</p>
+          <p style={{ fontSize: 13, color: 'var(--muted)' }}>
+            Es posible que el link haya expirado. Pide al administrador que te reenvie la invitacion.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (!listo) {
     return (
-      <div className="container" style={{ maxWidth: 380 }}>
+      <div className="pantalla-centrada">
         <div className="card">
+          <div className="icono-circulo">
+            <KeyRound size={26} />
+          </div>
           <p>Validando invitacion...</p>
         </div>
       </div>
@@ -64,11 +100,17 @@ export default function SetPasswordPage() {
   }
 
   return (
-    <div className="container" style={{ maxWidth: 380 }}>
+    <div className="pantalla-centrada">
       <div className="card">
-        <h1>Crea tu contrasena</h1>
+        <div className="icono-circulo">
+          <KeyRound size={26} />
+        </div>
+        <h1 style={{ marginTop: 0 }}>Crea tu contrasena</h1>
+        <p style={{ color: 'var(--muted)', fontSize: 13, marginTop: -8 }}>Ultimo paso para activar tu cuenta</p>
         <form onSubmit={handleSubmit}>
-          <label>Nueva contrasena</label>
+          <label>
+            <Lock size={13} /> Nueva contrasena
+          </label>
           <input
             type="password"
             value={password}
@@ -77,7 +119,7 @@ export default function SetPasswordPage() {
             required
           />
           {error && <p className="error">{error}</p>}
-          <button type="submit" disabled={guardando}>
+          <button type="submit" disabled={guardando} style={{ width: '100%', justifyContent: 'center' }}>
             {guardando ? 'Guardando...' : 'Guardar y entrar'}
           </button>
         </form>

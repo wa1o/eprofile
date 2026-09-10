@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { UserPlus, LayoutDashboard, Power, Trash2, LogOut, Users, Mail, Link2 } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { RequireAuth } from '@/components/RequireAuth';
 
@@ -101,22 +102,30 @@ function Contenido() {
   return (
     <div className="container">
       <div className="top-bar">
-        <h1 style={{ margin: 0 }}>Panel de administracion</h1>
+        <h1 className="titulo-con-icono" style={{ margin: 0 }}>
+          <LayoutDashboard size={24} /> Panel de administracion
+        </h1>
         <button className="secundario" onClick={cerrarSesion}>
-          Cerrar sesion
+          <LogOut size={15} /> Cerrar sesion
         </button>
       </div>
 
       <div className="card">
-        <h2 style={{ marginTop: 0 }}>Crear cuenta de estudiante</h2>
+        <h2 className="titulo-con-icono" style={{ marginTop: 0 }}>
+          <UserPlus size={17} /> Crear cuenta de estudiante
+        </h2>
         <form onSubmit={invitar}>
           <div className="grid-2">
             <div>
-              <label>Correo</label>
+              <label>
+                <Mail size={13} /> Correo
+              </label>
               <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
             </div>
             <div>
-              <label>Slug (ruta)</label>
+              <label>
+                <Link2 size={13} /> Slug (ruta)
+              </label>
               <input
                 value={slug}
                 onChange={(e) => setSlug(e.target.value.toLowerCase())}
@@ -129,13 +138,15 @@ function Contenido() {
           {error && <p className="error">{error}</p>}
           {mensaje && <p className="exito">{mensaje}</p>}
           <button type="submit" disabled={enviando}>
-            {enviando ? 'Enviando...' : 'Enviar invitacion'}
+            <UserPlus size={15} /> {enviando ? 'Enviando...' : 'Enviar invitacion'}
           </button>
         </form>
       </div>
 
       <div className="card">
-        <h2 style={{ marginTop: 0 }}>Estudiantes</h2>
+        <h2 className="titulo-con-icono" style={{ marginTop: 0 }}>
+          <Users size={17} /> Estudiantes
+        </h2>
         {error && <p className="error">{error}</p>}
         {cargando ? (
           <p>Cargando...</p>
@@ -161,13 +172,15 @@ function Contenido() {
                 </div>
                 <div className="fila-botones">
                   <Link href={`/${e.slug}/admin`}>
-                    <button className="secundario">Administrar</button>
+                    <button className="secundario">
+                      <LayoutDashboard size={14} /> Administrar
+                    </button>
                   </Link>
                   <button className="secundario" onClick={() => alternarActivo(e.usuario_id, !!e.usuarios?.activo)}>
-                    {e.usuarios?.activo ? 'Desactivar' : 'Activar'}
+                    <Power size={14} /> {e.usuarios?.activo ? 'Desactivar' : 'Activar'}
                   </button>
                   <button className="peligro" onClick={() => setAEliminar(e)}>
-                    Eliminar
+                    <Trash2 size={14} /> Eliminar
                   </button>
                 </div>
               </div>
@@ -179,8 +192,11 @@ function Contenido() {
       {aEliminar && (
         <div className="overlay" onClick={() => setAEliminar(null)}>
           <div className="modal" onClick={(ev) => ev.stopPropagation()}>
-            <h3 style={{ marginTop: 0 }}>Eliminar estudiante</h3>
-            <p>
+            <div className="icono-circulo" style={{ background: '#fef2f2', color: 'var(--danger)' }}>
+              <Trash2 size={24} />
+            </div>
+            <h3 style={{ marginTop: 0, textAlign: 'center' }}>Eliminar estudiante</h3>
+            <p style={{ textAlign: 'center' }}>
               Esto borra permanentemente la cuenta de{' '}
               <strong>{aEliminar.perfiles?.nombre_completo || aEliminar.slug}</strong> y todo su contenido
               (perfil, CV, proyectos, habilidades, reconocimientos y contacto). No se puede deshacer.

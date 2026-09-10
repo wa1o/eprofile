@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { LayoutDashboard, ExternalLink, LogOut, QrCode as QrCodeIcon, Palette, GraduationCap, FolderKanban, Sparkles, Award, Contact } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import { RequireAuth } from '@/components/RequireAuth';
 import { PerfilForm } from '@/components/PerfilForm';
@@ -60,19 +61,25 @@ function Contenido({ slug }: { slug: string }) {
   return (
     <div className="container">
       <div className="top-bar">
-        <h1 style={{ margin: 0 }}>Mi panel</h1>
+        <h1 className="titulo-con-icono" style={{ margin: 0 }}>
+          <LayoutDashboard size={24} /> Mi panel
+        </h1>
         <div className="fila-botones">
           <Link href={`/${slug}`}>
-            <button className="secundario">Ver mi EProfile</button>
+            <button className="secundario">
+              <ExternalLink size={15} /> Ver mi EProfile
+            </button>
           </Link>
           <button className="secundario" onClick={cerrarSesion}>
-            Cerrar sesion
+            <LogOut size={15} /> Cerrar sesion
           </button>
         </div>
       </div>
 
       <div className="card">
-        <h2 style={{ marginTop: 0 }}>Enlace y QR</h2>
+        <h2 className="titulo-con-icono" style={{ marginTop: 0 }}>
+          <QrCodeIcon size={17} /> Enlace y QR
+        </h2>
         <p style={{ fontSize: 13, wordBreak: 'break-all' }}>
           <a href={urlPublica}>{urlPublica}</a>
         </p>
@@ -80,7 +87,9 @@ function Contenido({ slug }: { slug: string }) {
       </div>
 
       <div className="card">
-        <h2 style={{ marginTop: 0 }}>Plantilla de CV</h2>
+        <h2 className="titulo-con-icono" style={{ marginTop: 0 }}>
+          <Palette size={17} /> Plantilla de CV
+        </h2>
         <select value={plantilla} onChange={(e) => cambiarPlantilla(e.target.value)}>
           <option value="clasica">Clasica</option>
           <option value="moderna">Moderna</option>
@@ -96,6 +105,7 @@ function Contenido({ slug }: { slug: string }) {
         table="curriculums"
         estudianteId={estudianteId}
         titulo="Formacion y experiencia"
+        icono={<GraduationCap size={17} />}
         campoResumen="titulo"
         campoSubResumen="institucion_empresa"
         campos={[
@@ -112,6 +122,7 @@ function Contenido({ slug }: { slug: string }) {
         table="proyectos"
         estudianteId={estudianteId}
         titulo="Proyectos"
+        icono={<FolderKanban size={17} />}
         campoResumen="nombre"
         campos={[
           { name: 'nombre', label: 'Nombre', type: 'text' },
@@ -127,6 +138,7 @@ function Contenido({ slug }: { slug: string }) {
         table="habilidades"
         estudianteId={estudianteId}
         titulo="Habilidades"
+        icono={<Sparkles size={17} />}
         campoResumen="nombre"
         campoSubResumen="categoria"
         campos={[
@@ -139,6 +151,7 @@ function Contenido({ slug }: { slug: string }) {
         table="reconocimientos"
         estudianteId={estudianteId}
         titulo="Reconocimientos"
+        icono={<Award size={17} />}
         campoResumen="titulo"
         campoSubResumen="emisor"
         campos={[
@@ -153,6 +166,7 @@ function Contenido({ slug }: { slug: string }) {
         table="enlaces_contacto"
         estudianteId={estudianteId}
         titulo="Contacto"
+        icono={<Contact size={17} />}
         campoResumen="red_tipo"
         campoSubResumen="valor"
         campos={[

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { LogIn, Mail, Lock } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 
 export default function LoginPage() {
@@ -50,13 +51,21 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="container" style={{ maxWidth: 380 }}>
+    <div className="pantalla-centrada">
       <div className="card">
-        <h1>Iniciar sesion</h1>
+        <div className="icono-circulo">
+          <LogIn size={26} />
+        </div>
+        <h1 style={{ marginTop: 0 }}>Iniciar sesion</h1>
+        <p style={{ color: 'var(--muted)', fontSize: 13, marginTop: -8 }}>Entra a tu EProfile</p>
         <form onSubmit={handleSubmit}>
-          <label>Correo</label>
+          <label>
+            <Mail size={13} /> Correo
+          </label>
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <label>Contrasena</label>
+          <label>
+            <Lock size={13} /> Contrasena
+          </label>
           <input
             type="password"
             value={password}
@@ -64,7 +73,7 @@ export default function LoginPage() {
             required
           />
           {error && <p className="error">{error}</p>}
-          <button type="submit" disabled={cargando}>
+          <button type="submit" disabled={cargando} style={{ width: '100%', justifyContent: 'center' }}>
             {cargando ? 'Entrando...' : 'Entrar'}
           </button>
         </form>

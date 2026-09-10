@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { User, Camera, Save, Eye, EyeOff } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 
 interface Perfil {
@@ -70,7 +71,9 @@ export function PerfilForm({ estudianteId }: { estudianteId: string }) {
   return (
     <div className="card">
       <div className="top-bar">
-        <h2 style={{ margin: 0 }}>Perfil</h2>
+        <h2 className="titulo-con-icono" style={{ margin: 0 }}>
+          <User size={17} /> Perfil
+        </h2>
         <span className={`badge ${perfil.estado}`}>{perfil.estado}</span>
       </div>
 
@@ -86,7 +89,9 @@ export function PerfilForm({ estudianteId }: { estudianteId: string }) {
       <label>Resena breve</label>
       <textarea value={perfil.resena ?? ''} onChange={(e) => setPerfil({ ...perfil, resena: e.target.value })} />
 
-      <label>Foto</label>
+      <label>
+        <Camera size={13} /> Foto
+      </label>
       {perfil.foto_url && (
         // eslint-disable-next-line @next/next/no-img-element
         <img src={perfil.foto_url} alt="Foto actual" style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover', marginBottom: 8 }} />
@@ -124,15 +129,15 @@ export function PerfilForm({ estudianteId }: { estudianteId: string }) {
 
       <div className="fila-botones">
         <button onClick={() => guardar()} disabled={guardando}>
-          Guardar borrador
+          <Save size={15} /> Guardar borrador
         </button>
         {perfil.estado === 'borrador' ? (
           <button onClick={() => guardar('publicado')} disabled={guardando} className="secundario">
-            Publicar
+            <Eye size={15} /> Publicar
           </button>
         ) : (
           <button onClick={() => guardar('borrador')} disabled={guardando} className="secundario">
-            Pasar a borrador
+            <EyeOff size={15} /> Pasar a borrador
           </button>
         )}
       </div>

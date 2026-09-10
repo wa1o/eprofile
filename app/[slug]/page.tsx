@@ -1,5 +1,6 @@
 import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import { QrCode } from '@/components/QrCode';
+import { Download, Contact as ContactIcon, GraduationCap, FolderKanban, Sparkles, Award, AtSign, QrCode as QrCodeIcon, ExternalLink } from 'lucide-react';
 
 export const revalidate = 0;
 
@@ -82,16 +83,20 @@ export default async function EProfilePublica({ params }: { params: { slug: stri
 
       <div className="card fila-botones">
         <a href={`/api/cv/${params.slug}`} target="_blank" rel="noopener noreferrer">
-          <button>Descargar CV en PDF</button>
+          <button>
+            <Download size={15} /> Descargar CV en PDF
+          </button>
         </a>
         <a href={`/api/vcard/${params.slug}`}>
-          <button className="secundario">Guardar contacto</button>
+          <button className="secundario">
+            <ContactIcon size={15} /> Guardar contacto
+          </button>
         </a>
       </div>
 
       {curriculums && curriculums.length > 0 && (
         <div className="card">
-          <div className="seccion-titulo">Formacion y experiencia</div>
+          <div className="seccion-titulo titulo-con-icono"><GraduationCap size={14} /> Formacion y experiencia</div>
           {curriculums.map((c) => (
             <div key={c.id} className="item-lista">
               <strong>{c.titulo}</strong>
@@ -107,14 +112,14 @@ export default async function EProfilePublica({ params }: { params: { slug: stri
 
       {habilidades && habilidades.length > 0 && (
         <div className="card">
-          <div className="seccion-titulo">Habilidades</div>
+          <div className="seccion-titulo titulo-con-icono"><Sparkles size={14} /> Habilidades</div>
           <p>{habilidades.map((h) => h.nombre).join('  -  ')}</p>
         </div>
       )}
 
       {proyectos && proyectos.length > 0 && (
         <div className="card">
-          <div className="seccion-titulo">Proyectos</div>
+          <div className="seccion-titulo titulo-con-icono"><FolderKanban size={14} /> Proyectos</div>
           {proyectos.map((p) => (
             <div key={p.id} className="item-lista">
               <strong>
@@ -136,7 +141,7 @@ export default async function EProfilePublica({ params }: { params: { slug: stri
 
       {reconocimientos && reconocimientos.length > 0 && (
         <div className="card">
-          <div className="seccion-titulo">Reconocimientos</div>
+          <div className="seccion-titulo titulo-con-icono"><Award size={14} /> Reconocimientos</div>
           {reconocimientos.map((r) => (
             <div key={r.id} className="item-lista">
               <strong>{r.titulo}</strong>
@@ -152,7 +157,7 @@ export default async function EProfilePublica({ params }: { params: { slug: stri
 
       {enlaces && enlaces.length > 0 && (
         <div className="card">
-          <div className="seccion-titulo">Contacto</div>
+          <div className="seccion-titulo titulo-con-icono"><AtSign size={14} /> Contacto</div>
           {enlaces.map((e) => (
             <p key={e.id} style={{ margin: '4px 0' }}>
               {e.red_tipo}: {e.valor}
@@ -162,7 +167,7 @@ export default async function EProfilePublica({ params }: { params: { slug: stri
       )}
 
       <div className="card" style={{ textAlign: 'center' }}>
-        <div className="seccion-titulo">Tarjeta digital</div>
+        <div className="seccion-titulo titulo-con-icono" style={{justifyContent: "center"}}><QrCodeIcon size={14} /> Tarjeta digital</div>
         {siteUrl && <QrCode url={urlPropia} />}
         <p style={{ fontSize: 12, color: '#64748b' }}>Escanea para abrir esta EProfile</p>
       </div>

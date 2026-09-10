@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { Plus, Pencil, Eye, EyeOff, Trash2, X, Check } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 
 export type Campo =
@@ -14,6 +15,7 @@ interface Props {
   table: string;
   estudianteId: string;
   titulo: string;
+  icono?: React.ReactNode;
   campos: Campo[];
   /** Nombre de campo(s) que forman el titulo visible de cada item en la lista */
   campoResumen: string;
@@ -57,7 +59,7 @@ function formularioAItem(valores: Record<string, any>, campos: Campo[]) {
   return out;
 }
 
-export function SeccionCRUD({ table, estudianteId, titulo, campos, campoResumen, campoSubResumen }: Props) {
+export function SeccionCRUD({ table, estudianteId, titulo, icono, campos, campoResumen, campoSubResumen }: Props) {
   const [items, setItems] = useState<any[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
@@ -137,8 +139,14 @@ export function SeccionCRUD({ table, estudianteId, titulo, campos, campoResumen,
   return (
     <div className="card">
       <div className="top-bar">
-        <h2 style={{ margin: 0 }}>{titulo}</h2>
-        {!mostrarForm && <button onClick={abrirNuevo}>+ Agregar</button>}
+        <h2 className="titulo-con-icono" style={{ margin: 0 }}>
+          {icono} {titulo}
+        </h2>
+        {!mostrarForm && (
+          <button onClick={abrirNuevo}>
+            <Plus size={15} /> Agregar
+          </button>
+        )}
       </div>
 
       {error && <p className="error">{error}</p>}
@@ -185,9 +193,11 @@ export function SeccionCRUD({ table, estudianteId, titulo, campos, campoResumen,
             </div>
           ))}
           <div className="fila-botones">
-            <button onClick={guardar}>Guardar</button>
+            <button onClick={guardar}>
+              <Check size={15} /> Guardar
+            </button>
             <button className="secundario" onClick={() => setMostrarForm(false)}>
-              Cancelar
+              <X size={15} /> Cancelar
             </button>
           </div>
         </div>
@@ -212,13 +222,14 @@ export function SeccionCRUD({ table, estudianteId, titulo, campos, campoResumen,
               </div>
               <div className="fila-botones">
                 <button className="secundario" onClick={() => abrirEditar(item)}>
-                  Editar
+                  <Pencil size={13} /> Editar
                 </button>
                 <button className="secundario" onClick={() => alternarPublicado(item)}>
+                  {item.estado === 'publicado' ? <EyeOff size={13} /> : <Eye size={13} />}
                   {item.estado === 'publicado' ? 'Despublicar' : 'Publicar'}
                 </button>
                 <button className="peligro" onClick={() => eliminar(item.id)}>
-                  Eliminar
+                  <Trash2 size={13} /> Eliminar
                 </button>
               </div>
             </div>

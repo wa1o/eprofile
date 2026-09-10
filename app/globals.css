@@ -3,11 +3,13 @@
 }
 
 :root {
-  --bg: #f4f5f7;
-  --ink: #16181d;
-  --muted: #6b7280;
-  --line: #e5e7eb;
-  --accent: #4f46e5;
+  --bg: #fafaf9;
+  --ink: #1c1917;
+  --muted: #78716c;
+  --line: #e7e5e4;
+  --accent: #f97316;
+  --accent-dark: #ea580c;
+  --accent-soft: #fff7ed;
   --accent-ink: #ffffff;
   --danger: #e11d48;
   --ok: #059669;
@@ -17,16 +19,12 @@
 
 body {
   margin: 0;
-  font-family:
-    "Inter",
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    Roboto,
-    Helvetica,
-    Arial,
-    sans-serif;
-  background: var(--bg);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background:
+    radial-gradient(1000px circle at 10% -10%, #ffedd5 0%, transparent 55%),
+    radial-gradient(800px circle at 100% 0%, #ffe4d1 0%, transparent 45%),
+    var(--bg);
+  background-attachment: fixed;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
@@ -124,13 +122,15 @@ button {
   font-weight: 700;
   background: var(--accent);
   color: var(--accent-ink);
-  transition:
-    transform 0.08s ease,
-    opacity 0.15s ease;
+  transition: transform 0.08s ease, opacity 0.15s ease;
 }
 
 button:hover {
-  opacity: 0.92;
+  background: var(--accent-dark);
+}
+
+button.secundario:hover {
+  background: #e7e5e4;
 }
 
 button:active {
@@ -138,7 +138,7 @@ button:active {
 }
 
 button.secundario {
-  background: #eef0f4;
+  background: #f5f5f4;
   color: var(--ink);
 }
 
@@ -149,6 +149,39 @@ button.peligro {
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+button svg,
+a svg {
+  vertical-align: -3px;
+}
+
+.fila-botones button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icono-circulo {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.titulo-con-icono {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.titulo-con-icono svg {
+  color: var(--accent);
 }
 
 .fila-botones {
@@ -170,7 +203,7 @@ button:disabled {
 }
 
 .badge::before {
-  content: "";
+  content: '';
   width: 6px;
   height: 6px;
   border-radius: 50%;
@@ -271,9 +304,7 @@ button:disabled {
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 14px 16px;
-  transition:
-    border-color 0.15s ease,
-    background 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .fila-estudiante:hover {
@@ -320,4 +351,23 @@ button:disabled {
   max-width: 400px;
   width: 100%;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.pantalla-centrada {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.pantalla-centrada .card {
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(28, 25, 23, 0.08);
+}
+
+.pantalla-centrada .card form {
+  text-align: left;
 }
