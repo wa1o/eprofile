@@ -35,7 +35,7 @@ function Contenido() {
 
   async function cargar() {
     setCargando(true);
-    const res = await fetch('/api/admin/estudiantes');
+    const res = await fetch('/api/admin/estudiantes', { cache: 'no-store' });
     const json = await res.json();
     setEstudiantes(json.estudiantes ?? []);
     setCargando(false);
@@ -142,51 +142,36 @@ function Contenido() {
         ) : estudiantes.length === 0 ? (
           <p>Aun no hay estudiantes registrados.</p>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
-          <table>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Slug</th>
-                <th>Perfil</th>
-                <th>Cuenta</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {estudiantes.map((e) => (
-                <tr key={e.id}>
-                  <td>{e.perfiles?.nombre_completo || '(sin nombre)'}</td>
-                  <td>
-                    <Link href={`/${e.slug}`}>{e.slug}</Link>
-                  </td>
-                  <td>
+          <div className="lista-estudiantes">
+            {estudiantes.map((e) => (
+              <div key={e.id} className="fila-estudiante">
+                <div className="info">
+                  <div className="nombre">{e.perfiles?.nombre_completo || '(sin nombre)'}</div>
+                  <div className="slug">
+                    <Link href={`/${e.slug}`}>/{e.slug}</Link>
+                  </div>
+                  <div className="badges">
                     <span className={`badge ${e.perfiles?.estado ?? 'borrador'}`}>
                       {e.perfiles?.estado ?? 'borrador'}
                     </span>
-                  </td>
-                  <td>
                     <span className={`badge ${e.usuarios?.activo ? 'activo' : 'inactivo'}`}>
                       {e.usuarios?.activo ? 'activo' : 'inactivo'}
                     </span>
-                  </td>
-                  <td>
-                    <div className="fila-botones">
-                      <Link href={`/${e.slug}/admin`}>
-                        <button className="secundario">Administrar</button>
-                      </Link>
-                      <button className="secundario" onClick={() => alternarActivo(e.usuario_id, !!e.usuarios?.activo)}>
-                        {e.usuarios?.activo ? 'Desactivar' : 'Activar'}
-                      </button>
-                      <button className="peligro" onClick={() => setAEliminar(e)}>
-                        Eliminar
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                  </div>
+                </div>
+                <div className="fila-botones">
+                  <Link href={`/${e.slug}/admin`}>
+                    <button className="secundario">Administrar</button>
+                  </Link>
+                  <button className="secundario" onClick={() => alternarActivo(e.usuario_id, !!e.usuarios?.activo)}>
+                    {e.usuarios?.activo ? 'Desactivar' : 'Activar'}
+                  </button>
+                  <button className="peligro" onClick={() => setAEliminar(e)}>
+                    Eliminar
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
