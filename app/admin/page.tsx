@@ -27,6 +27,7 @@ function Contenido() {
   const [error, setError] = useState('');
   const [mensaje, setMensaje] = useState('');
   const [enviando, setEnviando] = useState(false);
+  const [aEliminar, setAEliminar] = useState<FilaEstudiante | null>(null);
 
   useEffect(() => {
     cargar();
@@ -81,9 +82,9 @@ function Contenido() {
   }
 
   async function eliminar(usuarioId: string) {
-    if (!confirm('Eliminar esta cuenta y todo su contenido? Esta accion no se puede deshacer.')) return;
     setError('');
     const res = await fetch(`/api/admin/estudiantes/${usuarioId}`, { method: 'DELETE' });
+    setAEliminar(null);
     if (!res.ok) {
       const json = await res.json().catch(() => ({}));
       setError(json.error ?? 'No se pudo eliminar la cuenta.');
@@ -177,7 +178,7 @@ function Contenido() {
                       <button className="secundario" onClick={() => alternarActivo(e.usuario_id, !!e.usuarios?.activo)}>
                         {e.usuarios?.activo ? 'Desactivar' : 'Activar'}
                       </button>
-                      <button className="peligro" onClick={() => eliminar(e.usuario_id)}>
+                      <button className="peligro" onClick={() => setAEliminar(e)}>
                         Eliminar
                       </button>
                     </div>
@@ -189,6 +190,27 @@ function Contenido() {
           </div>
         )}
       </div>
+
+      {aEliminar && (
+        <div className="overlay" onClick={() => setAEliminar(null)}>
+          <div className="modal" onClick={(ev) => ev.stopPropagation()}>
+            <h3 style={{ marginTop: 0 }}>Eliminar estudiante</h3>
+            <p>
+              Esto borra permanentemente la cuenta de{' '}
+              <strong>{aEliminar.perfiles?.nombre_completo || aEliminar.slug}</strong> y todo su contenido
+              (perfil, CV, proyectos, habilidades, reconocimientos y contacto). No se puede deshacer.
+            </p>
+            <div className="fila-botones" style={{ justifyContent: 'flex-end' }}>
+              <button className="secundario" onClick={() => setAEliminar(null)}>
+                Cancelar
+              </button>
+              <button className="peligro" onClick={() => eliminar(aEliminar.usuario_id)}>
+                Eliminar definitivamente
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -34,13 +34,19 @@ export function RequireAuth({
         return;
       }
 
-      const { data: usuario } = await supabase
+      const { data: usuario, error: usuarioError } = await supabase
         .from('usuarios')
         .select('rol, activo')
         .eq('id', session.user.id)
         .single();
 
-      if (!usuario || !usuario.activo) {
+      if (usuarioError) {
+        // Error transitorio (red, RLS, timing) - no expulsamos al login, solo negamos esta vista.
+        if (activo) setEstado('denegado');
+        return;
+      }
+
+      if (!usuario.activo) {
         await supabase.auth.signOut();
         router.push('/auth/login');
         return;
